@@ -1,8 +1,12 @@
 -module(erl_three).
--export([start/0, save/1]).
+-compile(export_all).
+% -export([start/0, save/1]).
 
 % This code inspired by Alexander Samoylovich and fprog.ru team.
 % http://fprog.ru/2009/issue2/alexander-samoylovich-erlang-crawler/
+
+print_page(Page) ->
+   mochiweb_html:parse(Page).
 
 get_start_base() -> "http://airwar.ru/".
 get_start_url() -> get_start_base() ++ "image/".
