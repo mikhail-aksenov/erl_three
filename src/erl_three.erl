@@ -8,6 +8,32 @@
 print_page(Page) ->
    mochiweb_html:parse(Page).
 
+process_page(Url) ->
+    case get_url_contents(Url) of
+        {ok, Data} ->
+            Tokens = mochiweb_html:parse(Data),
+            lists:flatten(process_tokens(Tokens, []));
+        _ -> []
+    end.
+
+process_tokens({<<"a">>, Attrs, Contents}, Acc) ->
+    X = lists:keysearch(<<"href">>, 1, Attrs),
+    NewAcc = case X of
+                 {value, T} -> [T | Acc];
+                 _ ->  Acc
+             end,
+    NewAcc ++ [process_tokens(C, []) || C <- Contents];
+process_tokens({_, _, Contents}, _) ->
+    [process_tokens(C, []) || C <- Contents];
+process_tokens(_, _) -> [].
+
+    
+   
+    
+
+
+
+
 get_start_base() -> "http://airwar.ru/".
 get_start_url() -> get_start_base() ++ "image/".
 out_file_name() -> "pictures.txt".
